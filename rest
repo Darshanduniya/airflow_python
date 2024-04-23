@@ -1,0 +1,15 @@
+import subprocess
+import time
+import os
+
+def restart_script():
+    script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "restart.py")
+    subprocess.Popen(["python", script_path])  # Start a new instance of the script
+
+if __name__ == "__main__":
+    # Change the current working directory to /data/duni
+    os.chdir("/data/duni")
+    
+    while True:
+        restart_script()  # Restart the script
+        time.sleep(180)   # Sleep for 3 minutes (180 seconds)
