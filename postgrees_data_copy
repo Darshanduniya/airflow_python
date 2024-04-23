@@ -1,0 +1,59 @@
+import psycopg2
+import csv
+import os
+
+def fetch_table_data(table_name):
+    try:
+        # Connect to your PostgreSQL database
+        conn = psycopg2.connect(
+            dbname="your_database_name",
+            user="your_username",
+            password="your_password",
+            host="your_host",
+            port="your_port"
+        )
+
+        # Create a cursor object using the cursor() method
+        cursor = conn.cursor()
+
+        # Fetch data from the specified table
+        cursor.execute(f"SELECT * FROM {table_name};")
+        data = cursor.fetchall()
+
+        # Close the cursor and the connection
+        cursor.close()
+        conn.close()
+
+        return data
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error fetching data from table:", error)
+        return None
+
+def write_to_csv(data, filename):
+    try:
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(data)
+        print(f"Data has been written to {filename}")
+
+    except Exception as e:
+        print("Error writing to CSV:", e)
+
+# Define the table name from which you want to fetch the data
+table_name = "your_table_name"
+
+# Fetch data from the specified table
+table_data = fetch_table_data(table_name)
+
+# If data is fetched successfully, write it to a CSV file
+if table_data:
+    # Define the directory where you want to store the CSV file
+    output_directory = "your_output_directory"
+    os.makedirs(output_directory, exist_ok=True)  # Create the directory if it doesn't exist
+    
+    # Define the filename for the CSV file
+    output_filename = os.path.join(output_directory, f"{table_name}.csv")
+
+    # Write data to CSV file
+    write_to_csv(table_data, output_filename)
