@@ -1,0 +1,48 @@
+import psycopg2
+import csv
+import os
+
+def load_csv_into_table(csv_filename, table_name):
+    try:
+        # Connect to your PostgreSQL database
+        conn = psycopg2.connect(
+            dbname="your_database_name",
+            user="your_username",
+            password="your_password",
+            host="your_host",
+            port="your_port"
+        )
+
+        # Create a cursor object using the cursor() method
+        cursor = conn.cursor()
+
+        # Construct the COPY command to load data from CSV into the table
+        copy_sql = f"""
+                    COPY {table_name}
+                    FROM '{csv_filename}' DELIMITER ',' CSV HEADER;
+                    """
+        
+        # Execute the COPY command
+        cursor.execute(copy_sql)
+        conn.commit()
+
+        # Close the cursor and the connection
+        cursor.close()
+        conn.close()
+
+        print(f"Data from {csv_filename} has been loaded into table {table_name}")
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error loading data into table:", error)
+
+# Define the table name into which you want to load the data
+table_name = "your_table_name"
+
+# Define the directory where the CSV file is located
+input_directory = "your_input_directory"
+
+# Define the filename of the CSV file
+input_filename = os.path.join(input_directory, f"{table_name}.csv")
+
+# Load data from CSV into the specified table
+load_csv_into_table(input_filename, table_name)
