@@ -47,3 +47,13 @@ table_name = "your_table_name"
 
 # Load data from CSV file into the specified PostgreSQL database table
 load_csv_into_postgres(csv_filename, table_name)
+
+
+
+++++++++++++++++++++++++++++++++++
+
+table_name = "your_table_name"
+# For demonstration purposes, let's assume the CSV file has three columns
+csv_columns = ['column1', 'column2', 'column3']
+insert_query = f"INSERT INTO {table_name} VALUES ({', '.join(['%s'] * len(csv_columns))})"
+print(insert_query)
