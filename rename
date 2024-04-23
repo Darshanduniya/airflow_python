@@ -1,0 +1,23 @@
+import os
+
+# Specify the path to the directory containing the file
+directory = '/path/to/your/directory/'
+
+# Specify the old and new filenames
+old_filename = 'darhan_one.dat'
+new_filename = 'darshan.dat'
+
+# Construct the full paths for the old and new files
+old_path = os.path.join(directory, old_filename)
+new_path = os.path.join(directory, new_filename)
+
+# Rename the file
+try:
+    os.rename(old_path, new_path)
+    print(f"File '{old_filename}' renamed to '{new_filename}' successfully.")
+except FileNotFoundError:
+    print(f"File '{old_filename}' not found.")
+except FileExistsError:
+    print(f"A file named '{new_filename}' already exists.")
+except Exception as e:
+    print(f"An error occurred: {e}")
