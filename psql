@@ -1,0 +1,32 @@
+import subprocess
+import os
+
+def load_csv_into_table(csv_filename, table_name):
+    try:
+        # Construct the psql command to execute \copy
+        psql_command = [
+            "psql",
+            "-d", "your_database_name",
+            "-U", "your_username",
+            "-c", f"\\copy {table_name} FROM '{csv_filename}' DELIMITER ',' CSV HEADER"
+        ]
+
+        # Execute the psql command
+        subprocess.run(psql_command, check=True)
+
+        print(f"Data from {csv_filename} has been loaded into table {table_name}")
+
+    except Exception as error:
+        print("Error loading data into table:", error)
+
+# Define the table name into which you want to load the data
+table_name = "your_table_name"
+
+# Define the directory where the CSV file is located
+input_directory = "your_input_directory"
+
+# Define the filename of the CSV file
+input_filename = os.path.join(input_directory, f"{table_name}.csv")
+
+# Load data from CSV into the specified table
+load_csv_into_table(input_filename, table_name)
