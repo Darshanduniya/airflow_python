@@ -1,0 +1,44 @@
+import psycopg2
+
+# Database connection details
+host = "<your_host>"
+user = "<your_user>"
+password = "<your_password>"
+database = "<your_database>"
+table_name = "<your_table_name>"
+csv_file = "<path/to/your/csv_file.csv>"
+
+# Connect to the PostgreSQL database
+try:
+    conn = psycopg2.connect(host=host, user=user, password=password, database=database)
+    cur = conn.cursor()
+
+except Exception as e:
+    print("Error connecting to database:", e)
+    exit()
+
+# Open the CSV file
+try:
+    with open(csv_file, 'r') as f:
+        # Assuming the first row contains column names (adjust if not)
+        next(f)  # Skip the header row
+        data = f.readlines()
+
+except Exception as e:
+    print("Error opening CSV file:", e)
+    exit()
+
+# Execute COPY command to efficiently load data
+try:
+    cur.copy_from(f, table_name, sep=',', null='')
+    conn.commit()
+    print("CSV data loaded successfully!")
+
+except Exception as e:
+    print("Error loading data:", e)
+    conn.rollback()  # Rollback any changes in case of error
+
+# Close the connection
+finally:
+    if conn:
+        conn.close()
