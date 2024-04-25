@@ -1,0 +1,33 @@
+Step 1: Export Connections from the Old Server
+First, you need to export the connections from your current Airflow instance. You can do this by running the airflow connections export command, which will generate a JSON file containing all the connection data.
+On the old server, execute:
+# Navigate to the Airflow home directory (if necessary)
+cd ~/airflow
+
+# Export connections to a JSON file
+airflow connections export connections.json
+This command will create a file named connections.json in your current directory with all the connection data from your old Airflow instance.
+Step 2: Transfer the Exported File
+Next, transfer the connections.json file from the old server to the new server. You can use scp (Secure Copy Protocol) for this purpose.
+On your local machine or directly from the old server, execute:
+# Replace `new_server_username` with the actual username on the new server
+# Replace `new_server_host` with the actual hostname or IP address of the new server
+# Replace `/path/to/new_airflow_directory` with the path to the Airflow directory on the new server
+scp connections.json new_server_username@new_server_host:/path/to/new_airflow_directory
+This command will copy the connections.json file to the specified directory on the new server.
+Step 3: Import Connections to the New Server
+Finally, on the new server, you will import the connections into the new Airflow instance using the airflow connections import command.
+On the new server, execute:
+# Navigate to the Airflow home directory (if necessary)
+cd /path/to/new_airflow_directory
+
+# Import connections from the JSON file
+airflow connections import connections.json
+This command will read the connections.json file and import all the connections into your new Airflow instance.
+Additional Notes:
+Ensure that the Airflow CLI is installed and properly configured on both the old and new servers.
+The Airflow home directory is typically ~/airflow, but it may vary depending on your installation.
+The airflow connections export/import commands are available starting from Airflow 2.0. If you are using an older version, you may need to manually export and import connections using the metadata database.
+Handle the connections.json file securely, especially if it contains sensitive information such as passwords or secrets.
+Verify that the new Airflow instance has the same providers installed as the old one, as some connections may depend on specific providers.
+By following these steps, you should be able to successfully migrate your Airflow connections from one server to another.
